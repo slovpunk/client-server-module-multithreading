@@ -2,50 +2,45 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class ThreadedServer implements AutoCloseable {
-	private final ServerSocket serverSocket;
+    private final ServerSocket serverSocket;
 
-	public ThreadedServer(int port) throws Exception {
-		serverSocket = new ServerSocket(port);
-	}
+    public ThreadedServer(int port) throws Exception {
+        serverSocket = new ServerSocket(port);
+    }
 
-	public void start() throws Exception {
-		System.out.println("New chat");
+    public void start() throws Exception {
+        System.out.println("New chat");
 
-		while (true) {
-			var socket = serverSocket.accept();
-			new ClientHandlerThread(socket).start();
-		}
-	}
+        while (true) {
+            var socket = serverSocket.accept();
+            new ClientHandlerThread(socket).start();
+        }
+    }
 
-	@Override
-	public void close() throws Exception {
-		serverSocket.close();
-	}
+    @Override
+    public void close() throws Exception {
+        serverSocket.close();
+    }
 
-	private static class ClientHandlerThread extends Thread {
-		private final Socket socket;
+    private static class ClientHandlerThread extends Thread {
+        private final Socket socket;
 
-		ClientHandlerThread(Socket socket) {
-			this.socket = socket;
-		}
+        ClientHandlerThread(Socket socket) {
+            this.socket = socket;
+        }
 
-		@Override
-		public void run() {
-			try {
-				try (var client = new ClientHandler(socket)) {
-					client.run();
-				}
-			}
-			catch (Exception e) {
-				System.out.println(socket.getPort() + " exception: " + e);
-			}
-			finally {
-				try {
-					socket.close();
-				}
-				catch (Exception e) {
-				}
-			}
-		}
-	}
+        @Override
+        public void run() {
+            try (var client = new ClientHandler(socket)) {
+                client.run();
+            } catch (Exception e) {
+                System.out.println(socket.getPort() + " exception: " + e);
+            } finally {
+                try {
+                    socket.close();
+                } catch (Exception e) {
+                }
+            }
+        }
+    }
 }
