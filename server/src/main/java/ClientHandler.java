@@ -1,38 +1,25 @@
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.*;
 import java.net.Socket;
 
 class ClientHandler implements AutoCloseable {
-	private final DataInputStream inputStream;
-	private final DataOutputStream outputStream;
+    private BufferedReader inputStream;
+    private BufferedWriter outputStream;
 
-	public ClientHandler(Socket socket) throws Exception {
-		inputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-		outputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-	}
+    public ClientHandler(Socket socket) throws Exception {
+        this.inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        this.outputStream = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+    }
 
-	public void run() throws Exception {
-		while (true) {
-			var command = inputStream.readUTF();
-			switch (command) {
-				case "add":
-					var a = inputStream.readInt();
-					var b = inputStream.readInt();
-					System.out.println("add: " + a + ", " + b);
-					outputStream.writeInt(a + b);
-					outputStream.flush();
-					break;
-				default:
-					throw new UnsupportedOperationException("Unknown command: " + command);
-			}
-		}
-	}
+    public void run() throws Exception {
+        var command = inputStream.readLine();
+        System.out.println(command);
+        outputStream.write(command);
+        outputStream.flush();
+    }
 
-	@Override
-	public void close() throws Exception {
-		inputStream.close();
-		outputStream.close();
-	}
+    @Override
+    public void close() throws Exception {
+        inputStream.close();
+        outputStream.close();
+    }
 }

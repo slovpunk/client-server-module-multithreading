@@ -1,25 +1,19 @@
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 public class Client implements AutoCloseable {
-	private final DataInputStream inputStream;
-	private final DataOutputStream outputStream;
+	private BufferedReader inputStream;
+	private BufferedWriter outputStream;
 
 	public Client(InputStream is, OutputStream os) {
-		inputStream = new DataInputStream(new BufferedInputStream(is));
-		outputStream = new DataOutputStream(new BufferedOutputStream(os));
+		this.inputStream = new BufferedReader(new InputStreamReader(is));
+		this.outputStream = new BufferedWriter(new OutputStreamWriter(os));
 	}
 
-	public int add(int a, int b) throws Exception {
-		outputStream.writeUTF("add");
-		outputStream.writeInt(a);
-		outputStream.writeInt(b);
+	public String say(String phrase) throws IOException {
+		outputStream.write(phrase);
+		outputStream.newLine();
 		outputStream.flush();
-		return inputStream.readInt();
+		return inputStream.readLine();
 	}
 
 	@Override
