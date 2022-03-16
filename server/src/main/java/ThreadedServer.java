@@ -9,7 +9,7 @@ public class ThreadedServer implements AutoCloseable {
 	}
 
 	public void start() throws Exception {
-		System.out.println("listen");
+		System.out.println("New chat");
 
 		while (true) {
 			var socket = serverSocket.accept();

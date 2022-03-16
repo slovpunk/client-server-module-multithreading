@@ -8,7 +8,6 @@ public class ClientApplication {
                      var client = new Client(socket.getInputStream(), socket.getOutputStream())) {
                 var scanner = new Scanner(System.in);
                 client.say(scanner.nextLine());
-
             }
         }
     }
