@@ -3,12 +3,11 @@ import java.util.Scanner;
 
 public class ClientApplication {
     public static void main(String[] args) throws Exception {
-        try (var socket = new Socket("localhost", 8081);
-             var client = new Client(socket.getInputStream(), socket.getOutputStream())) {
-
             while (true) {
+                try (var socket = new Socket("localhost", 8081);
+                     var client = new Client(socket.getInputStream(), socket.getOutputStream())) {
                 var scanner = new Scanner(System.in);
-                System.out.println("result: " + client.say(scanner.nextLine()));
+                client.say(scanner.nextLine());
 
             }
         }

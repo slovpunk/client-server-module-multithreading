@@ -32,9 +32,7 @@ public class ThreadedServer implements AutoCloseable {
 		@Override
 		public void run() {
 			try {
-				System.out.println(socket.getPort() + " accepted");
 				try (var client = new ClientHandler(socket)) {
-					System.out.println("ClientHandler run thread");
 					client.run();
 				}
 			}
